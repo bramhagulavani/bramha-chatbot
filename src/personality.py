@@ -7,7 +7,7 @@ load_dotenv()
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 # ── YOUR PERSONALITY SYSTEM PROMPT ──────────────────────────────────────────
-# This is the most important part — fill in YOUR real details!
+
 
 SYSTEM_PROMPT = """
 You are Bramha's personal AI assistant — a smart, friendly and helpful chatbot 

@@ -6,7 +6,7 @@ load_dotenv()
 
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
-# ── Personality System Prompt ────────────────────────────────────────────────
+# ── Personality System Prompt 
 SYSTEM_PROMPT = """
 You are Bramha's personal AI assistant — a smart, friendly and helpful chatbot
 built specifically for Bramha Vinayak Gulavani.

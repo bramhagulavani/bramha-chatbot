@@ -162,7 +162,7 @@ footer_html = """
 """
 
 # ── Build Gradio Chat App ────────────────────────────────────────────────────
-with gr.Blocks(css=custom_css, title="🤖 Bramha's Personal AI") as app:
+with gr.Blocks(title="🤖 Bramha's Personal AI") as app:
 
     gr.HTML("<h1>🤖 Bramha's Personal AI</h1>")
     gr.HTML(banner)
@@ -170,9 +170,8 @@ with gr.Blocks(css=custom_css, title="🤖 Bramha's Personal AI") as app:
     chatbot = gr.ChatInterface(
         fn=chat,
         chatbot=gr.Chatbot(
-            height=450,
-            bubble_full_width=False,
-            avatar_images=(
+    height=450,
+    avatar_images=(
                 "https://api.dicebear.com/7.x/initials/svg?seed=BG&backgroundColor=378ADD",
                 "https://api.dicebear.com/7.x/bottts/svg?seed=bramha"
             )
@@ -196,4 +195,4 @@ with gr.Blocks(css=custom_css, title="🤖 Bramha's Personal AI") as app:
 
 # ── Launch ───────────────────────────────────────────────────────────────────
 print("Starting Bramha's Personal AI...")
-app.launch()
+app.launch(css=custom_css)

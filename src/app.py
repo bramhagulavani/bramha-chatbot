@@ -89,9 +89,13 @@ Bramha's message: {message}
 
     # Convert Gradio history to API format
     api_history = []
-    for human, assistant in history:
-        api_history.append({"role": "user", "content": human})
-        api_history.append({"role": "assistant", "content": assistant})
+    for msg in history:
+        if isinstance(msg, dict):
+            api_history.append({"role": msg["role"], "content": msg["content"]})
+        else:
+          api_history.append({"role": "user", "content": msg[0]})
+        if msg[1]:
+            api_history.append({"role": "assistant", "content": msg[1]})
 
     # Add current message
     api_history.append({

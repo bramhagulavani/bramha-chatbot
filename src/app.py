@@ -40,7 +40,6 @@ built specifically for Bramha Vinayak Gulavani.
 # ── Load Knowledge Base ──────────────────────────────────────────────────────
 print("Loading knowledge base...")
 
-# Check if embeddings already saved — if yes, load directly
 if os.path.exists("models/embeddings/index.faiss"):
     print("Loading existing embeddings...")
     embeddings = HuggingFaceEmbeddings(
@@ -79,7 +78,7 @@ def chat(message, history):
     # Search knowledge base for relevant context
     context = search_knowledge(message)
 
-    # Build message with context
+    # Build message with context injected
     message_with_context = f"""
 Context from Bramha's personal knowledge base:
 {context}
@@ -87,17 +86,23 @@ Context from Bramha's personal knowledge base:
 Bramha's message: {message}
 """
 
-    # Convert Gradio history to API format
+    # Convert Gradio 6.0 history format to API format
     api_history = []
     for msg in history:
         if isinstance(msg, dict):
-            api_history.append({"role": msg["role"], "content": msg["content"]})
-        else:
-          api_history.append({"role": "user", "content": msg[0]})
-        if msg[1]:
-            api_history.append({"role": "assistant", "content": msg[1]})
+            # Gradio 6.0 format — dict with role and content
+            api_history.append({
+                "role": msg["role"],
+                "content": msg["content"]
+            })
+        elif isinstance(msg, (list, tuple)) and len(msg) == 2:
+            # Old Gradio format — tuple of (user, assistant)
+            if msg[0]:
+                api_history.append({"role": "user", "content": str(msg[0])})
+            if msg[1]:
+                api_history.append({"role": "assistant", "content": str(msg[1])})
 
-    # Add current message
+    # Add current message with context
     api_history.append({
         "role": "user",
         "content": message_with_context
@@ -114,7 +119,7 @@ Bramha's message: {message}
 
     return response.choices[0].message.content
 
-# ── Custom CSS — WhatsApp Dark Theme ────────────────────────────────────────
+# ── Custom CSS — Dark Theme ──────────────────────────────────────────────────
 custom_css = """
     .gradio-container {
         background: linear-gradient(135deg, #0f2027, #203a43, #2c5364) !important;
@@ -171,14 +176,15 @@ with gr.Blocks(title="🤖 Bramha's Personal AI") as app:
     gr.HTML("<h1>🤖 Bramha's Personal AI</h1>")
     gr.HTML(banner)
 
-    chatbot = gr.ChatInterface(
+    gr.ChatInterface(
         fn=chat,
         chatbot=gr.Chatbot(
-    height=450,
-    avatar_images=(
+            height=450,
+            avatar_images=(
                 "https://api.dicebear.com/7.x/initials/svg?seed=BG&backgroundColor=378ADD",
                 "https://api.dicebear.com/7.x/bottts/svg?seed=bramha"
-            )
+            ),
+            type="messages"
         ),
         textbox=gr.Textbox(
             placeholder="Ask me anything, Bramha...",
@@ -193,6 +199,7 @@ with gr.Blocks(title="🤖 Bramha's Personal AI") as app:
             "What are my goals?"
         ],
         cache_examples=False,
+        type="messages"
     )
 
     gr.HTML(footer_html)

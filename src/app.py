@@ -184,7 +184,7 @@ with gr.Blocks(title="🤖 Bramha's Personal AI") as app:
                 "https://api.dicebear.com/7.x/initials/svg?seed=BG&backgroundColor=378ADD",
                 "https://api.dicebear.com/7.x/bottts/svg?seed=bramha"
             ),
-            type="messages"
+           
         ),
         textbox=gr.Textbox(
             placeholder="Ask me anything, Bramha...",
@@ -199,7 +199,7 @@ with gr.Blocks(title="🤖 Bramha's Personal AI") as app:
             "What are my goals?"
         ],
         cache_examples=False,
-        type="messages"
+       
     )
 
     gr.HTML(footer_html)
